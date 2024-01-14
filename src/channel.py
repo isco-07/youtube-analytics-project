@@ -78,6 +78,10 @@ class Channel:
         """Возвращает __channel_id"""
         return self.__channel_id
 
+    @property
+    def url(self):
+        return self.__url
+
     @staticmethod
     def get_service() -> Any:
         """Возвращает объект для работы с YouTube API"""

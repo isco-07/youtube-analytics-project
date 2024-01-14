@@ -1,4 +1,3 @@
-import json
 import os
 
 from googleapiclient.discovery import build
@@ -15,10 +14,17 @@ class Video:
             .list(part="snippet,statistics,contentDetails,topicDetails", id=video_id)
             .execute()
         )
-        self.url = f"https://www.youtube.com/watch?v={self.video_id}"
-        self.title = video_response["items"][0]["snippet"]["title"]
-        self.view_count = video_response["items"][0]["statistics"]["viewCount"]
-        self.like_count = video_response["items"][0]["statistics"]["likeCount"]
+        try:
+            self.title = video_response["items"][0]["snippet"]["title"]
+        except IndexError:
+            self.url = None
+            self.title = None
+            self.view_count = None
+            self.like_count = None
+        else:
+            self.url = f"https://www.youtube.com/watch?v={self.video_id}"
+            self.view_count = video_response["items"][0]["statistics"]["viewCount"]
+            self.like_count = video_response["items"][0]["statistics"]["likeCount"]
 
     def __str__(self):
         return f"{self.title}"
