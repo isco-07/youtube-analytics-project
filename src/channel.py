@@ -22,9 +22,47 @@ class Channel:
         self.title = channel["items"][0]["snippet"]["title"]
         self.channel_desc = channel["items"][0]["snippet"]["description"]
         self.video_count = channel["items"][0]["statistics"]["videoCount"]
-        self.subscriber_count = channel["items"][0]["statistics"]["subscriberCount"]
+        self.subscriber_count = int(
+            channel["items"][0]["statistics"]["subscriberCount"]
+        )
         self.view_count = channel["items"][0]["statistics"]["viewCount"]
-        self.url = f"https://www.youtube.com/channel/{channel_id}"
+        self.__url = f"https://www.youtube.com/channel/{channel_id}"
+
+    def __str__(self):
+        """Возвращающий название и ссылку на канал"""
+        return f"'{self.title} ({self.__url})'"
+
+    def __add__(self, other):
+        """Складывает два канала по количеству подписчиков"""
+        return self.subscriber_count + other.subscriber_count
+
+    def __sub__(self, other):
+        """Вычитает из первого канала количество подписчиков второго канала"""
+        return self.subscriber_count - other.subscriber_count
+
+    def __lt__(self, other):
+        """Сравнивает два канала по количеству подписчиков через оператор <"""
+        return self.subscriber_count < other.subscriber_count
+
+    def __le__(self, other):
+        """Сравнивает два канала по количеству подписчиков через оператор <="""
+        return self.subscriber_count <= other.subscriber_count
+
+    def __gt__(self, other):
+        """Сравнивает два канала по количеству подписчиков через оператор >"""
+        return self.subscriber_count > other.subscriber_count
+
+    def __ge__(self, other):
+        """Сравнивает два канала по количеству подписчиков через оператор >="""
+        return self.subscriber_count >= other.subscriber_count
+
+    def __eq__(self, other):
+        """Сравнивает два канала по количеству подписчиков через оператор =="""
+        return self.subscriber_count == other.subscriber_count
+
+    def __ne__(self, other):
+        """Сравнивает два канала по количеству подписчиков через оператор !="""
+        return self.subscriber_count != other.subscriber_count
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале."""
@@ -40,6 +78,10 @@ class Channel:
         """Возвращает __channel_id"""
         return self.__channel_id
 
+    @property
+    def url(self):
+        return self.__url
+
     @staticmethod
     def get_service() -> Any:
         """Возвращает объект для работы с YouTube API"""
@@ -52,7 +94,7 @@ class Channel:
                 "id": self.__channel_id,
                 "nameChannel": self.title,
                 "description": self.channel_desc,
-                "url": self.url,
+                "url": self.__url,
                 "subscribers": self.subscriber_count,
                 "videoCount": self.video_count,
                 "viewCount": self.view_count,
